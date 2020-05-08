@@ -1,0 +1,22 @@
+{
+    "adminusers": {
+        "username":"String",
+        "password":"String"
+    },
+    "formdatas":{
+        "numbering":"String",
+        "title":"String",
+        "picurl":"String",
+        "amount":"String",
+        "condition":"String"
+    },
+    "essays":{
+        "title":"String",
+        "tag":"String",
+        "top":"Boolean",
+        "content":"Object",
+        "updateTime":"String",
+        "timeStamp":"String",
+        "author":"String"
+    }
+}

@@ -1,0 +1,18 @@
+﻿{
+  "_id" : ObjectId("5da060eb736d61269c077cf4"),
+  "numbering" : "202005050016",
+  "title" : "红米",
+  "picurl" : "/upload/687da090-ec16-11e9-b575-ef301311ca91.jpg",
+  "amount" : "2999",
+  "condition" : "实物",
+  "__v" : 0
+}
+{
+  "_id" : ObjectId("5da060eb736d61269c077cf4"),
+  "numbering": "20200505162129",
+  "title": "言棠",
+  "picurl": "/upload/20200505162129.JPG",
+  "amount": "123",
+  "condition": "虚拟",
+  "__v" : 0
+}
