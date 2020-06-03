@@ -8,6 +8,8 @@ const uuidv1 = require('uuid/v1'); //产生唯一字符串
 var time = require("time-stamp")
 const path = require('path');
 const fs = require('fs');
+const jwt = require("jsonwebtoken")
+const secret = "yufengwangtong"
 const table_user = 'adminusers'//管理员数据集合
 const table_data = 'formdatas'//表格数据集合
 const essays_data = 'essays'//文章数据集合
@@ -15,8 +17,7 @@ const essays_data = 'essays'//文章数据集合
 /*******************管理员相关接口-开始***********************/
 //管理员登录
 router.post("/login", (req, res) => {
-    let post = req.query;
-    let { password, username } = post;
+    let { password, username } = req.body;
     // 密码加密处理
     const secret = '123!@#$abcd'; //密钥
     password = crypto
@@ -32,7 +33,9 @@ router.post("/login", (req, res) => {
         }
         req.session.username = username;
         req.session.id = result[0].id;
-        return res.json({ status: 1, info: '登录成功', data: result[0] })
+        var token = jwt.sign({username}, secret, {expiresIn: "1h"})
+
+        return res.json({ status: 1, token, info: '登录成功', data: result[0] })
     });
 });
 //管理员列表
@@ -41,11 +44,10 @@ router.get("/userlist", (req, res) => {
         return res.json({ status: 1, info: '获取成功', data: result })
     });
 });
-//添加管理员
-router.post("/useradd", (req, res) => {
-    let username = req.query.username;
-    let password = req.query.password;
-    console.log(username,2)
+//管理员注册
+router.post("/register", (req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
     // 密码加密处理
     const secret = '123!@#$abcd'; //密钥
     password = crypto
@@ -59,9 +61,9 @@ router.post("/useradd", (req, res) => {
         } else {
             db.insert(table_user, { username, password }, err => {
                 if (!err) {
-                    return res.json({ status: 1, info: '添加成功' })
+                    return res.json({ status: 1, info: '注册成功' })
                 } else {
-                    return res.json({ status: -1, info: '添加失败' })
+                    return res.json({ status: -1, info: '注册失败' })
                 }
             });
         }
@@ -69,7 +71,7 @@ router.post("/useradd", (req, res) => {
 });
 //管理员信息获取-一条
 router.get('/userinfo', (req, res) => {
-    let id = req.query.id;
+    let id = req.body.id;
     if (id == undefined) {
         return res.json({ status: -1, info: '缺少参数' })
     }
@@ -79,13 +81,13 @@ router.get('/userinfo', (req, res) => {
 });
 //管理员修改
 router.post("/useredit", (req, res) => {
-    let _id = req.query.id;
+    let _id = req.body.id;
     if (_id == undefined) {
         return res.json({ status: -1, info: '缺少参数' })
     }
     let userinfo = {
-        username: req.query.username,
-        password: req.query.password
+        username: req.body.username,
+        password: req.body.password
     }
     if (userinfo.password) {
         // 密码加密处理
@@ -107,7 +109,7 @@ router.post("/useredit", (req, res) => {
 });
 //管理员删除
 router.post("/userdel", (req, res) => {
-    let _id = req.query.id;
+    let _id = req.body.id;
     if (_id == undefined) {
         return res.json({ status: -1, info: '缺少参数' })
     }
@@ -170,7 +172,7 @@ router.post("/tablesadd", (req, res) => {
 });
 //获取表格信息-一条
 router.get('/tablesinfo', (req, res) => {
-    let _id = req.query.id;
+    let _id = req.body.id;
     if (_id == undefined) {
         return res.json({ status: -1, info: '参数错误' })
     }
@@ -215,7 +217,7 @@ router.post("/tablesedit", (req, res) => {
 });
 //表格删除
 router.post("/tablesdel", (req, res) => {
-    let _id = req.query.id;
+    let _id = req.body.id;
     if (_id == undefined) {
         return res.json({ status: -1, info: '参数错误' })
     }
@@ -262,7 +264,7 @@ router.post("/addArticle", (req, res) => {
 });
 //获取文章信息-一条
 router.get('/articleinfo', (req, res) => {
-    let _id = req.query.id;
+    let _id = req.body.id;
     // console.log(_id)
     if (_id == undefined) {
         return res.json({ status: -1, info: '参数错误' })
@@ -273,7 +275,7 @@ router.get('/articleinfo', (req, res) => {
 });
 //文章删除
 router.post("/articledel", (req, res) => {
-    let _id = req.query.id;
+    let _id = req.body.id;
     if (_id == undefined) {
         return res.json({ status: -1, info: '缺少参数' })
     }

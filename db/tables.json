@@ -1,5 +1,6 @@
 {
     "adminusers": {
+        "portrait":"String",
         "username":"String",
         "password":"String"
     },
